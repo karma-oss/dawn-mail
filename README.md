@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DAWN MAIL
 
-## Getting Started
+> **KARMA Spec v1** — data-karma-action, data-karma-auth, data-karma-test-id, data-karma-entity, data-karma-state
 
-First, run the development server:
+メール配信管理システム — DAWN SERIES
+
+## 概要
+
+DAWN MAIL は、メール配信リストの管理とキャンペーンの作成・送信を行うシステムです。
+
+## 機能
+
+- **ダッシュボード**: キャンペーン統計の表示（総数・送信済み・下書き）
+- **配信リスト管理**: リストの作成・編集・削除
+- **キャンペーン管理**: メールキャンペーンの作成・編集・プレビュー・送信
+- **認証**: Supabase Auth によるメール/パスワード認証
+- **RLS**: Row Level Security によるデータアクセス制御
+
+## 技術スタック
+
+- **フレームワーク**: Next.js 16 (App Router)
+- **UI**: shadcn/ui v4 (base-ui), Tailwind CSS v4
+- **認証・DB**: Supabase (Auth, PostgreSQL, RLS)
+- **メール送信**: Resend
+- **テスト**: Playwright
+- **CI**: GitHub Actions
+
+## セットアップ
 
 ```bash
+npm install
+cp .env.local.example .env.local  # 環境変数を設定
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 開発サーバー
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev  # http://localhost:3003
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## テスト
 
-## Learn More
+```bash
+npx playwright test
+```
 
-To learn more about Next.js, take a look at the following resources:
+## スキーマ
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`supabase/schema.sql` を参照してください。
