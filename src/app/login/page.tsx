@@ -35,6 +35,7 @@ export default function LoginPage() {
   return (
     <div
       className="flex min-h-screen items-center justify-center bg-background p-4"
+      data-karma-context="authentication"
       data-karma-action="login"
       data-karma-auth="none"
       data-karma-test-id="login-page"
@@ -55,7 +56,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                data-karma-test-id="login-email"
+                data-karma-test-id="email-input"
               />
             </div>
             <div className="grid gap-2">
@@ -66,7 +67,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                data-karma-test-id="login-password"
+                data-karma-test-id="password-input"
               />
             </div>
             {error && (
@@ -74,7 +75,7 @@ export default function LoginPage() {
                 {error}
               </p>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading} data-karma-test-id="submit-btn">
               {loading ? "ログイン中..." : "ログイン"}
             </Button>
 
