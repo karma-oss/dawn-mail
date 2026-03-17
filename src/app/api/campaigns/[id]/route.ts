@@ -14,6 +14,16 @@ export async function PUT(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { data: staff } = await supabase
+    .from("staff")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!staff) {
+    return NextResponse.json({ error: "No staff" }, { status: 403 });
+  }
+
   const { id } = await params;
   const body = await request.json();
   const subject = String(body.subject || "").trim();
@@ -42,6 +52,7 @@ export async function PUT(
     .from("email_campaigns")
     .update(updateData)
     .eq("id", id)
+    .eq("organization_id", staff.organization_id)
     .select()
     .single();
 
@@ -65,12 +76,23 @@ export async function DELETE(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { data: staff } = await supabase
+    .from("staff")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!staff) {
+    return NextResponse.json({ error: "No staff" }, { status: 403 });
+  }
+
   const { id } = await params;
 
   const { error } = await supabase
     .from("email_campaigns")
     .delete()
-    .eq("id", id);
+    .eq("id", id)
+    .eq("organization_id", staff.organization_id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -11,9 +11,20 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { data: staff } = await supabase
+    .from("staff")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!staff) {
+    return NextResponse.json({ error: "No staff" }, { status: 403 });
+  }
+
   const { data, error } = await supabase
     .from("email_campaigns")
     .select("*, email_lists(name)")
+    .eq("organization_id", staff.organization_id)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -45,12 +56,15 @@ export async function POST(request: Request) {
     );
   }
 
-  // Get organization_id from staff table
   const { data: staff } = await supabase
     .from("staff")
     .select("organization_id")
     .eq("user_id", user.id)
     .single();
+
+  if (!staff) {
+    return NextResponse.json({ error: "No staff" }, { status: 403 });
+  }
 
   const { data, error } = await supabase
     .from("email_campaigns")
@@ -58,7 +72,7 @@ export async function POST(request: Request) {
       subject,
       body: campaignBody,
       list_id: listId,
-      organization_id: staff?.organization_id,
+      organization_id: staff.organization_id,
       status: "draft",
     })
     .select()

@@ -17,6 +17,16 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { data: staff } = await supabase
+    .from("staff")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!staff) {
+    return NextResponse.json({ error: "No staff" }, { status: 403 });
+  }
+
   const { id } = await params;
 
   // Get campaign details
@@ -24,6 +34,7 @@ export async function POST(
     .from("email_campaigns")
     .select("*, email_lists(name)")
     .eq("id", id)
+    .eq("organization_id", staff.organization_id)
     .single();
 
   if (campaignError || !campaign) {

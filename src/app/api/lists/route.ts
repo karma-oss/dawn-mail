@@ -11,9 +11,20 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { data: staff } = await supabase
+    .from("staff")
+    .select("organization_id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!staff) {
+    return NextResponse.json({ error: "No staff" }, { status: 403 });
+  }
+
   const { data, error } = await supabase
     .from("email_lists")
     .select("*, email_list_members(count)")
+    .eq("organization_id", staff.organization_id)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -40,18 +51,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Name is required" }, { status: 400 });
   }
 
-  // Get organization_id from staff table
   const { data: staff } = await supabase
     .from("staff")
     .select("organization_id")
     .eq("user_id", user.id)
     .single();
 
+  if (!staff) {
+    return NextResponse.json({ error: "No staff" }, { status: 403 });
+  }
+
   const { data, error } = await supabase
     .from("email_lists")
     .insert({
       name,
-      organization_id: staff?.organization_id,
+      organization_id: staff.organization_id,
     })
     .select()
     .single();
